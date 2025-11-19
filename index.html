@@ -1,173 +1,103 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Мафия Онлайн</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0d0d0f;
-      color: #fff;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-    }
-    .card {
-      background: #1b1b1f;
-      padding: 30px;
-      border-radius: 16px;
-      width: 90%;
-      max-width: 380px;
-      text-align: center;
-      box-shadow: 0 0 30px rgba(0,0,0,0.4);
-      transition: opacity .3s, transform .3s;
-    }
-    .hidden {
-      opacity: 0;
-      pointer-events: none;
-      transform: scale(0.95);
-      position: absolute;
-    }
-    input, select, button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 12px;
-      border-radius: 10px;
-      border: none;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
-    input, select {
-      background: #2b2b31;
-      color: #fff;
-    }
-    button {
-      background: #ff4757;
-      color: #fff;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    button:hover {
-      background: #ff6b81;
-    }
-    label {
-      display: block;
-      text-align: left;
-      margin-top: 10px;
-      opacity: 0.8;
-    }
-  </style>
+<title>Мафия Онлайн</title>
+<meta charset="UTF-8" />
+<style>
+body { font-family: sans-serif; padding: 20px; max-width: 400px; margin: auto; }
+.hidden { display:none; }
+button { padding: 10px 20px; margin-top: 10px; }
+input { padding: 8px; width: 100%; margin-top: 10px; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <div class="card" id="joinCard">
-      <h2>Присоединиться к комнате</h2>
-      <input id="joinRoomId" placeholder="ID комнаты" />
-      <input id="playerNameJoin" placeholder="Ваше имя" />
-      <button onclick="joinRoom()">Присоединиться</button>
-      <hr style="margin:20px 0; opacity:0.2;">
-      <button onclick="showCreate()">Создать комнату</button>
-    </div>
 
-    <div class="card hidden" id="createCard">
-      <h2>Создать комнату</h2>
-      <input id="createRoomId" placeholder="ID комнаты" />
-      <input id="playerNameCreate" placeholder="Ваше имя (ведущий)" />
-      <label>Количество игроков:</label>
-      <input id="playerCount" type="number" min="3" placeholder="Например 7" />
+<h1>Мафия Онлайн</h1>
 
-      <label>Количество мафии:</label>
-      <input id="mafiaCount" type="number" min="1" placeholder="Например 2" />
+<div id="start">
+  <button onclick="createRoom()">Создать комнату</button>
+  <hr>
+  <input id="joinRoomId" placeholder="ID комнаты">
+  <input id="joinName" placeholder="Ваше имя">
+  <button onclick="joinRoom()">Войти</button>
+</div>
 
-      <label>Количество докторов:</label>
-      <input id="doctorCount" type="number" min="0" placeholder="0 или 1" />
+<div id="host" class="hidden">
+  <h3>Комната: <span id="roomIdHost"></span></h3>
+  <h3>Игроки:</h3>
+  <div id="players"></div>
 
-      <label>Количество детективов:</label>
-      <input id="detectiveCount" type="number" min="0" placeholder="0 или 1" />
+  <h3>Роли:</h3>
+  <label>Мафия: <input type="number" id="roleMafia" value="1"></label><br>
+  <label>Доктор: <input type="number" id="roleDoctor" value="1"></label><br>
+  <label>Комиссар: <input type="number" id="roleCop" value="1"></label><br>
 
-      <button onclick="createRoom()">Создать</button>
-      <button onclick="showJoin()" style="margin-top:10px; background:#444;">Назад</button>
-    </div>
-  </div>
+  <button onclick="assignRoles()">Раздать роли</button>
+</div>
+
+<div id="player" class="hidden">
+  <h3>Комната: <span id="roomIdPlayer"></span></h3>
+  <h2 id="role"></h2>
+</div>
 
 <script>
-function showCreate() {
-  document.getElementById('joinCard').classList.add('hidden');
-  document.getElementById('createCard').classList.remove('hidden');
+let ws = new WebSocket("https://mafia-c6a2.onrender.com");
+
+let currentRoom = "";
+
+ws.onmessage = (ev) => {
+  const msg = JSON.parse(ev.data);
+
+  if (msg.type === "room_created") {
+    currentRoom = msg.roomId;
+    document.getElementById("roomIdHost").textContent = currentRoom;
+    document.getElementById("start").classList.add("hidden");
+    document.getElementById("host").classList.remove("hidden");
+  }
+
+  if (msg.type === "joined") {
+    currentRoom = msg.roomId;
+    document.getElementById("roomIdPlayer").textContent = currentRoom;
+    document.getElementById("start").classList.add("hidden");
+    document.getElementById("player").classList.remove("hidden");
+  }
+
+  if (msg.type === "player_list") {
+    document.getElementById("players").textContent = msg.players.join(", ");
+  }
+
+  if (msg.type === "your_role") {
+    document.getElementById("role").textContent = "Ваша роль: " + msg.role;
+  }
+
+  if (msg.type === "error") alert(msg.message);
+};
+
+function createRoom() {
+  ws.send(JSON.stringify({ type: "create_room" }));
 }
 
-function showJoin() {
-  document.getElementById('createCard').classList.add('hidden');
-  document.getElementById('joinCard').classList.remove('hidden');
+function joinRoom() {
+  ws.send(JSON.stringify({
+    type: "join_room",
+    roomId: document.getElementById("joinRoomId").value,
+    name: document.getElementById("joinName").value
+  }));
 }
 
-// === SERVER URL ===
-const API = "https://mafia-c6a2.onrender.com";
-let socket = null;
-let currentPlayer = null;
-let currentRoom = null;
+function assignRoles() {
+  let roles = [];
+  roles.push(...Array(Number(document.getElementById("roleMafia").value)).fill("Мафия"));
+  roles.push(...Array(Number(document.getElementById("roleDoctor").value)).fill("Доктор"));
+  roles.push(...Array(Number(document.getElementById("roleCop").value)).fill("Комиссар"));
 
-async function createRoom() {
-  const roomId = document.getElementById('createRoomId').value.trim();
-  const playerName = document.getElementById('playerNameCreate').value.trim();
-
-  const roles = {
-    mafia: Number(document.getElementById('mafiaCount').value),
-    doctor: Number(document.getElementById('doctorCount').value),
-    detective: Number(document.getElementById('detectiveCount').value)
-  };
-
-  const res = await fetch(API + "/create-room", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ roomId, roles })
-  });
-
-  const data = await res.json();
-  if (!data.success) return alert("Ошибка создания комнаты");
-
-  currentPlayer = playerName;
-  currentRoom = roomId;
-
-  joinRoomWS(playerName, roomId);
-  alert("Комната создана! Теперь подключайтесь.");
-}
-
-async function joinRoom() {
-  const roomId = document.getElementById('joinRoomId').value.trim();
-  const playerName = document.getElementById('playerNameJoin').value.trim();
-
-  const res = await fetch(API + "/join-room", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ roomId, playerId: playerName })
-  });
-
-  const data = await res.json();
-  if (!data.success) return alert("Комната не существует или ошибка.");
-
-  currentPlayer = playerName;
-  currentRoom = roomId;
-
-  joinRoomWS(playerName, roomId);
-  alert("Вы подключились! Ожидайте раздачи роли.");
-}
-
-function joinRoomWS(playerName, roomId) {
-  socket = new WebSocket(API.replace("http", "ws") + "/ws?room=" + roomId + "&player=" + playerName);
-
-  socket.onmessage = (msg) => {
-    const data = JSON.parse(msg.data);
-    if (data.type === "role") {
-      alert("Ваша роль: " + data.role);
-    }
-  };
+  ws.send(JSON.stringify({
+    type: "assign_roles",
+    roomId: currentRoom,
+    roles
+  }));
 }
 </script>
+
 </body>
 </html>
