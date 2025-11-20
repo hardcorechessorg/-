@@ -1,0 +1,270 @@
+.App {
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+  text-align: center;
+  color: #667eea;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+}
+
+h2 {
+  color: #764ba2;
+  margin-bottom: 20px;
+}
+
+.mode-selection {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.mode-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.btn {
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: #48bb78;
+  color: white;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4);
+}
+
+.btn-back {
+  background: #a0aec0;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.btn-back:hover {
+  background: #718096;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.role-input {
+  background: #f7fafc;
+  padding: 15px;
+  border-radius: 10px;
+  border: 2px solid #e2e8f0;
+}
+
+.role-input label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.role-input input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #cbd5e0;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.players-list {
+  margin-top: 30px;
+  padding: 20px;
+  background: #f7fafc;
+  border-radius: 10px;
+}
+
+.player-item {
+  padding: 15px;
+  margin-bottom: 10px;
+  background: white;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.player-name {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.player-role {
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.role-mafia {
+  background: #fc8181;
+  color: white;
+}
+
+.role-don {
+  background: #9b2c2c;
+  color: white;
+}
+
+.role-commissar {
+  background: #3182ce;
+  color: white;
+}
+
+.role-doctor {
+  background: #48bb78;
+  color: white;
+}
+
+.role-killer {
+  background: #ed8936;
+  color: white;
+}
+
+.role-citizen {
+  background: #718096;
+  color: white;
+}
+
+.room-id-display {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.room-id-display h3 {
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+}
+
+.room-id-display .room-id {
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 5px;
+  margin: 10px 0;
+}
+
+.status-message {
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+  text-align: center;
+  font-weight: 600;
+}
+
+.status-success {
+  background: #c6f6d5;
+  color: #22543d;
+}
+
+.status-error {
+  background: #fed7d7;
+  color: #742a2a;
+}
+
+.status-info {
+  background: #bee3f8;
+  color: #2c5282;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #718096;
+}
+
+.my-role {
+  text-align: center;
+  padding: 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 15px;
+  margin: 20px 0;
+}
+
+.my-role h3 {
+  margin-bottom: 15px;
+  font-size: 1.8rem;
+}
+
+.my-role .role-name {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
