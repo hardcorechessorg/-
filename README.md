@@ -57,6 +57,15 @@ npm run client
 
 Проект настроен для работы с этими адресами. См. `DEPLOYMENT.md` для инструкций по развертыванию.
 
+### GitHub Pages авто-деплой
+
+- `client/package.json` содержит `homepage`, указывающий на адрес GitHub Pages.
+- Workflow `.github/workflows/pages.yml` при каждом пуше в `master`:
+  - устанавливает зависимости в корне и в `client/`;
+  - запускает `npm run build` внутри `client`;
+  - публикует содержимое `client/build` в ветку `gh-pages`.
+- В настройках GitHub Pages выберите ветку `gh-pages` и папку `/`.
+
 ## Использование
 
 ### Для ведущего:
