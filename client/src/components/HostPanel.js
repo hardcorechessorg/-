@@ -96,6 +96,11 @@ function HostPanel() {
            settings.doctor + settings.killer + settings.citizen;
   };
 
+  const getRemainingSlots = () => {
+    const remaining = getTotalRoles() - players.length;
+    return remaining > 0 ? remaining : 0;
+  };
+
   const getRoleLabel = (role) => {
     const labels = {
       mafia: 'Мафия',
@@ -205,6 +210,11 @@ function HostPanel() {
           <div className="players-section">
             <div className="section-header">
               <h2>Игроки в комнате ({players.length}/{getTotalRoles()})</h2>
+              {players.length < getTotalRoles() && (
+                <span className="help-text">
+                  Свободных мест: {getRemainingSlots()}
+                </span>
+              )}
               <button onClick={handleRefreshInfo} className="btn btn-secondary">
                 Обновить
               </button>
