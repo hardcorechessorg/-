@@ -53,18 +53,16 @@ npm run client
 ## Production
 
 - **Сервер**: https://mafia-c6a2.onrender.com
-- **Клиент**: https://hardcorechessorg.github.io/-/
+- **Клиент**: https://o5wm70agjz.onrender.com
 
 Проект настроен для работы с этими адресами. См. `DEPLOYMENT.md` для инструкций по развертыванию.
 
-### GitHub Pages авто-деплой
+### Render static deploy
 
-- `client/package.json` содержит `homepage`, указывающий на адрес GitHub Pages.
-- Workflow `.github/workflows/pages.yml` при каждом пуше в `master`:
-  - устанавливает зависимости в корне и в `client/`;
-  - запускает `npm run build` внутри `client`;
-  - публикует содержимое `client/build` в ветку `gh-pages`.
-- В настройках GitHub Pages выберите ветку `gh-pages` и папку `/`.
+- Клиент развёрнут как Render Static Site.
+- `client/package.json` содержит `homepage`, указывающий на render-домен.
+- Build command: `npm install && npm run build` (выполняется внутри `client/`).
+- Publish directory: `build`.
 
 ## Использование
 
